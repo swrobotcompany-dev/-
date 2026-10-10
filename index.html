@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тачка на прокачку</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 1400px;
+            height: 800px;
+            background: 
+                radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%),
+                linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 
+                0 30px 80px rgba(0,0,0,0.8),
+                inset 0 0 100px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .garage-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(90deg, transparent, transparent 148px, rgba(255,255,255,0.03) 148px, rgba(255,255,255,0.03) 150px),
+                repeating-linear-gradient(0deg, transparent, transparent 148px, rgba(255,255,255,0.03) 148px, rgba(255,255,255,0.03) 150px);
+        }
+        
+        .garage-floor {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: 
+                linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%),
+                repeating-linear-gradient(90deg, #2c3e50 0px, #34495e 2px, #2c3e50 4px);
+            box-shadow: inset 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .car-display {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 350px;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+        }
+        
+        .car-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .body-part {
+            position: absolute;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Реалистичный кузов с металлическим эффектом */
+        .chassis {
+            width: 480px;
+            height: 140px;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.3) 0%, 
+                transparent 30%, 
+                transparent 70%, 
+                rgba(0,0,0,0.2) 100%);
+            border-radius: 30px 30px 20px 20px;
+            top: 120px;
+            left: 60px;
+            box-shadow: 
+                inset 0 5px 15px rgba(255,255,255,0.3),
+                inset 0 -10px 25px rgba(0,0,0,0.4),
+                0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .chassis::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            border-radius: inherit;
+            filter: blur(2px);
+            opacity: 0.5;
+        }
+        
+        /* Капот с вентиляционными отверстиями */
+        .hood {
+            width: 220px;
+            height: 100px;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.25) 0%, 
+                transparent 50%, 
+                rgba(0,0,0,0.15) 100%);
+            border-radius: 25px 25px 0 0;
+            top: 20px;
+            left: 60px;
+            box-shadow: 
+                inset 0 3px 10px rgba(255,255,255,0.2),
+                0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .hood.vented::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            width: 160px;
+            height: 60px;
+            background: repeating-linear-gradient(90deg, 
+                transparent 0px, 
+                transparent 15px, 
+                rgba(0,0,0,0.4) 15px, 
+                rgba(0,0,0,0.4) 20px);
+            border-radius: 10px;
+        }
+        
+        .hood.carbon {
+            background: 
+                repeating-linear-gradient(45deg, 
+                    rgba(0,0,0,0.3) 0px, 
+                    rgba(0,0,0,0.3) 2px, 
+                    transparent 2px, 
+                    transparent 8px),
+                linear-gradient(180deg, #2c3e50, #1a252f);
+            box-shadow: 
+                inset 0 3px 10px rgba(255,255,255,0.1),
+                0 5px 15px rgba(0,0,0,0.4);
+        }
+        
+        /* Багажник */
+        .trunk {
+            width: 220px;
+            height: 100px;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.2) 0%, 
+                transparent 50%, 
+                rgba(0,0,0,0.2) 100%);
+            border-radius: 0 0 25px 25px;
+            top: 160px;
+            left: 320px;
+            box-shadow: 
+                inset 0 -3px 10px rgba(0,0,0,0.3),
+                0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Реалистичные бамперы */
+        .bumper-front {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.15) 0%, 
+                transparent 50%, 
+                rgba(0,0,0,0.3) 100%);
+            border-radius: 15px 10px 10px 15px;
+            top: 110px;
+            left: 20px;
+            box-shadow: 
+                inset 0 2px 8px rgba(255,255,255,0.2),
+                inset 0 -2px 8px rgba(0,0,0,0.3),
+                0 5px 15px rgba(0,0,0,0.4);
+        }
+        
+        .bumper-front.sport {
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            border-radius: 10px 5px 5px 10px;
+            width: 90px;
+        }
+        
+        .bumper-front.aggressive {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border-radius: 8px 3px 3px 8px;
+            width: 100px;
+            box-shadow: 
+                inset 0 2px 8px rgba(255,255,255,0.1),
+                0 8px 20px rgba(0,0,0,0.6);
+        }
+        
+        .bumper-rear {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(225deg, 
+                rgba(255,255,255,0.15) 0%, 
+                transparent 50%, 
+                rgba(0,0,0,0.3) 100%);
+            border-radius: 10px 15px 15px 10px;
+            top: 110px;
+            left: 500px;
+            box-shadow: 
+                inset 0 2px 8px rgba(255,255,255,0.2),
+                inset 0 -2px 8px rgba(0,0,0,0.3),
+                0 5px 15px rgba(0,0,0,0.4);
+        }
+        
+        .bumper-rear.sport {
+            background: linear-gradient(225deg, #2c3e50, #1a252f);
+            border-radius: 5px 10px 10px 5px;
+            width: 90px;
+        }
+        
+        .bumper-rear.aggressive {
+            background: linear-gradient(225deg, #1a1a1a, #0a0a0a);
+            border-radius: 3px 8px 8px 3px;
+            width: 100px;
+            box-shadow: 
+                inset 0 2px 8px rgba(255,255,255,0.1),
+                0 8px 20px rgba(0,0,0,0.6);
+        }
+        
+        /* Реалистичные фары */
+        .headlight-left, .headlight-right {
+            width: 50px;
+            height: 35px;
+            border-radius: 50% 30% 30% 50%;
+            top: 130px;
+            transition: all 0.3s ease;
+        }
+        
+        .headlight-left {
+            left: 35px;
+            transform: rotate(-5deg);
+        }
+        
+        .headlight-right {
+            left: 515px;
+            transform: rotate(5deg) scaleX(-1);
+        }
+        
+        .headlight-left.halogen, .headlight-right.halogen {
+            background: radial-gradient(ellipse at 30% 30%, 
+                #fff9e6 0%, 
+                #f1c40f 40%, 
+                #d4ac0d 70%, 
+                #b7950b 100%);
+            box-shadow: 
+                0 0 30px rgba(241, 196, 15, 0.6),
+                0 0 60px rgba(241, 196, 15, 0.3),
+                inset 0 0 15px rgba(255,255,255,0.5);
+        }
+        
+        .headlight-left.led, .headlight-right.led {
+            background: radial-gradient(ellipse at 30% 30%, 
+                #ffffff 0%, 
+                #ecf0f1 30%, 
+                #bdc3c7 60%, 
+                #95a5a6 100%);
+            box-shadow: 
+                0 0 40px rgba(255, 255, 255, 0.8),
+                0 0 80px rgba(255, 255, 255, 0.4),
+                0 0 120px rgba(255, 255, 255, 0.2),
+                inset 0 0 20px rgba(255,255,255,0.7);
+        }
+        
+        .headlight-left.xenon, .headlight-right.xenon {
+            background: radial-gradient(ellipse at 30% 30%, 
+                #e8f4fd 0%, 
+                #74b9ff 40%, 
+                #0984e3 70%, 
+                #0652dd 100%);
+            box-shadow: 
+                0 0 45px rgba(116, 185, 255, 0.9),
+                0 0 90px rgba(116, 185, 255, 0.5),
+                0 0 135px rgba(116, 185, 255, 0.3),
+                inset 0 0 20px rgba(255,255,255,0.6);
+        }
+        
+        /* Колеса (оставляем как есть) */
+        .wheel {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            position: absolute;
+            top: 180px;
+            transition: all 0.3s ease;
+        }
+        
+        .wheel.standard {
+            background: radial-gradient(circle at 30% 30%, #5a5a5a, #2c2c2c 40%, #1a1a1a 70%);
+            border: 8px solid #3d3d3d;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .wheel.standard::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: conic-gradient(from 0deg, #666 0deg, #666 30deg, #444 30deg, #444 60deg, #666 60deg, #666 90deg, #444 90deg, #444 120deg, #666 120deg, #666 150deg, #444 150deg, #444 180deg, #666 180deg, #666 210deg, #444 210deg, #444 240deg, #666 240deg, #666 270deg, #444 270deg, #444 300deg, #666 300deg, #666 330deg, #444 330deg, #444 360deg);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #555;
+        }
+        
+        .wheel.standard::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #silver, #999);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #777;
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.3);
+        }
+        
+        .wheel.sport {
+            background: radial-gradient(circle at 30% 30%, #4a4a4a, #1a1a1a 50%, #0a0a0a 80%);
+            border: 10px solid #e74c3c;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 20px rgba(231, 76, 60, 0.4), 0 5px 15px rgba(0,0,0,0.4);
+        }
+        
+        .wheel.sport::before {
+            content: '';
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            background: conic-gradient(from 0deg, #e74c3c 0deg, #e74c3c 45deg, #c0392b 45deg, #c0392b 90deg, #e74c3c 90deg, #e74c3c 135deg, #c0392b 135deg, #c0392b 180deg, #e74c3c 180deg, #e74c3c 225deg, #c0392b 225deg, #c0392b 270deg, #e74c3c 270deg, #e74c3c 315deg, #c0392b 315deg, #c0392b 360deg);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #ff6b6b;
+        }
+        
+        .wheel.sport::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: radial-gradient(circle, #fff, #ddd);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #e74c3c;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.6);
+        }
+        
+        .wheel.racing {
+            background: radial-gradient(circle at 30% 30%, #3a3a3a, #0a0a0a 60%, #000 90%);
+            border: 12px solid #f39c12;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.7), 0 0 25px rgba(243, 156, 18, 0.5), 0 5px 20px rgba(0,0,0,0.5);
+        }
+        
+        .wheel.racing::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: conic-gradient(from 0deg, #f39c12 0deg, #f39c12 36deg, #e67e22 36deg, #e67e22 72deg, #f39c12 72deg, #f39c12 108deg, #e67e22 108deg, #e67e22 144deg, #f39c12 144deg, #f39c12 180deg, #e67e22 180deg, #e67e22 216deg, #f39c12 216deg, #f39c12 252deg, #e67e22 252deg, #e67e22 288deg, #f39c12 288deg, #f39c12 324deg, #e67e22 324deg, #e67e22 360deg);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #ffd700;
+        }
+        
+        .wheel.racing::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #fff, #f1c40f);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #f39c12;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
+        }
+        
+        .wheel-front {
+            left: 80px;
+        }
+        
+        .wheel-rear {
+            left: 450px;
+        }
+        
+        /* Реалистичные спойлеры */
+        .spoiler {
+            position: absolute;
+            top: 40px;
+            left: 420px;
+            display: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        
+        .spoiler.active {
+            display: block;
+        }
+        
+        .spoiler.small {
+            width: 140px;
+            height: 15px;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.2) 0%, 
+                transparent 50%, 
+                rgba(0,0,0,0.3) 100%);
+            border-radius: 8px;
+            transform: perspective(200px) rotateX(15deg);
+        }
+        
+        .spoiler.large {
+            width: 180px;
+            height: 20px;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.25) 0%, 
+                transparent 50%, 
+                rgba(0,0,0,0.4) 100%);
+            border-radius: 10px;
+            transform: perspective(200px) rotateX(20deg);
+            box-shadow: 
+                0 8px 25px rgba(0,0,0,0.6),
+                inset 0 2px 5px rgba(255,255,255,0.2);
+        }
+        
+        .spoiler::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: inherit;
+            left: 20px;
+            top: 15px;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+        }
+        
+        .spoiler::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: inherit;
+            right: 20px;
+            top: 15px;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+        }
+        
+        /* Панель деталей */
+        .parts-panel {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 320px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            max-height: 760px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .panel-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(243, 156, 18, 0.3);
+        }
+        
+        .part-category {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #3498db;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .part-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .part-btn {
+            padding: 12px 8px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .part-btn:hover {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .part-btn.active {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            border-color: #2ecc71;
+            box-shadow: 0 0 20px rgba(39, 174, 96, 0.5);
+        }
+        
+        .color-picker {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .color-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        
+        .color-btn.active {
+            border-color: #f39c12;
+            box-shadow: 0 0 25px rgba(243, 156, 18, 0.7);
+            transform: scale(1.1);
+        }
+        
+        /* Панель характеристик */
+        .stats-panel {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            width: 240px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .stat-item {
+            margin-bottom: 20px;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-bar {
+            width: 100%;
+            height: 25px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71, #58d68d);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+            position: relative;
+        }
+        
+        .stat-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+        }
+        
+        .save-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #f39c12, #e67e22, #d35400);
+            border: none;
+            border-radius: 35px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 25px rgba(243, 156, 18, 0.5),
+                0 0 40px rgba(243, 156, 18, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .save-btn:hover {
+            transform: translateX(-50%) translateY(-5px);
+            box-shadow: 
+                0 12px 35px rgba(243, 156, 18, 0.7),
+                0 0 60px rgba(243, 156, 18, 0.5);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-150px);
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(39, 174, 96, 0.5);
+        }
+        
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="garage-bg"></div>
+        <div class="garage-floor"></div>
+        
+        <div class="stats-panel">
+            <div class="panel-title">📊 Характеристики</div>
+            <div class="stat-item">
+                <div class="stat-label">⚡ Скорость</div>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="speed-stat" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">🎯 Управление</div>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="handling-stat" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">💪 Мощность</div>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="power-stat" style="width: 50%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="car-display">
+            <div class="car-body">
+                <div class="body-part chassis" id="chassis"></div>
+                <div class="body-part hood standard" id="hood"></div>
+                <div class="body-part trunk" id="trunk"></div>
+                <div class="body-part bumper-front standard" id="bumper-front"></div>
+                <div class="body-part bumper-rear standard" id="bumper-rear"></div>
+                <div class="body-part headlight-left halogen" id="headlight-left"></div>
+                <div class="body-part headlight-right halogen" id="headlight-right"></div>
+                <div class="body-part wheel wheel-front standard" id="wheel-front"></div>
+                <div class="body-part wheel wheel-rear standard" id="wheel-rear"></div>
+                <div class="body-part spoiler" id="spoiler"></div>
+            </div>
+        </div>
+        
+        <div class="parts-panel">
+            <div class="panel-title">🔧 Тюнинг</div>
+            
+            <div class="part-category">
+                <div class="category-title">🎨 Цвет кузова</div>
+                <div class="color-picker" id="color-picker"></div>
+            </div>
+            
+            <div class="part-category">
+                <div class="category-title">🚗 Тип кузова</div>
+                <div class="part-options">
+                    <button class="part-btn active" data-part="body" data-value="sedan">Седан</button>
+                    <button class="part-btn" data-part="body" data-value="sport">Спорт</button>
+                    <button class="part-btn" data-part="body" data-value="muscle">Маслкар</button>
+                </div>
+            </div>
+            
+            <div class="part-category">
+                <div class="category-title">⚙️ Колеса</div>
+                <div class="part-options">
+                    <button class="part-btn active" data-part="wheels" data-value="standard">Стандарт</button>
+                    <button class="part-btn" data-part="wheels" data-value="sport">Спорт</button>
+                    <button class="part-btn" data-part="wheels" data-value="racing">Гоночные</button>
+                </div>
+            </div>
+            
+            <div class="part-category">
+                <div class="category-title">🛡️ Бамперы</div>
+                <div class="part-options">
+                    <button class="part-btn active" data-part="bumpers" data-value="standard">Стандарт</button>
+                    <button class="part-btn" data-part="bumpers" data-value="sport">Спорт</button>
+                    <button class="part-btn" data-part="bumpers" data-value="aggressive">Агрессив</button>
+                </div>
+            </div>
+            
+            <div class="part-category">
+                <div class="category-title">💡 Фары</div>
+                <div class="part-options">
+                    <button class="part-btn active" data-part="lights" data-value="halogen">Галоген</button>
+                    <button class="part-btn" data-part="lights" data-value="led">LED</button>
+                    <button class="part-btn" data-part="lights" data-value="xenon">Ксенон</button>
+                </div>
+            </div>
+            
+            <div class="part-category">
+                <div class="category-title">🔩 Капот</div>
+                <div class="part-options">
+                    <button class="part-btn active" data-part="hood" data-value="standard">Стандарт</button>
+                    <button class="part-btn" data-part="hood" data-value="vented">Вентилируемый</button>
+                    <button class="part-btn" data-part="hood" data-value="carbon">Карбон</button>
+                </div>
+            </div>
+            
+            <div class="part-category">
+                <div class="category-title">🏁 Спойлер</div>
+                <div class="part-options">
+                    <button class="part-btn active" data-part="spoiler" data-value="none">Нет</button>
+                    <button class="part-btn" data-part="spoiler" data-value="small">Малый</button>
+                    <button class="part-btn" data-part="spoiler" data-value="large">Большой</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="save-btn" onclick="saveCar()">💾 Сохранить тачку</button>
+    </div>
+    
+    <div class="notification" id="notification">✅ Машина сохранена!</div>
+    
+    <script>
+        const colors = [
+            '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+            '#1abc9c', '#e67e22', '#34495e', '#ecf0f1', '#95a5a6',
+            '#c0392b', '#2980b9'
+        ];
+        
+        let currentConfig = {
+            color: '#3498db',
+            body: 'sedan',
+            wheels: 'standard',
+            bumpers: 'standard',
+            lights: 'halogen',
+            hood: 'standard',
+            spoiler: 'none'
+        };
+        
+        // Initialize color picker
+        const colorPicker = document.getElementById('color-picker');
+        colors.forEach(color => {
+            const btn = document.createElement('div');
+            btn.className = 'color-btn';
+            btn.style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -30)})`;
+            if (color === currentConfig.color) btn.classList.add('active');
+            btn.onclick = () => selectColor(color, btn);
+            colorPicker.appendChild(btn);
+        });
+        
+        function selectColor(color, btn) {
+            currentConfig.color = color;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateCar();
+        }
+        
+        // Handle part selection
+        document.querySelectorAll('.part-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const part = this.dataset.part;
+                const value = this.dataset.value;
+                
+                document.querySelectorAll(`[data-part="${part}"]`).forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentConfig[part] = value;
+                updateCar();
+            });
+        });
+        
+        function updateCar() {
+            const chassis = document.getElementById('chassis');
+            const hood = document.getElementById('hood');
+            const trunk = document.getElementById('trunk');
+            const bumperFront = document.getElementById('bumper-front');
+            const bumperRear = document.getElementById('bumper-rear');
+            const headlightLeft = document.getElementById('headlight-left');
+            const headlightRight = document.getElementById('headlight-right');
+            const wheelFront = document.getElementById('wheel-front');
+            const wheelRear = document.getElementById('wheel-rear');
+            const spoiler = document.getElementById('spoiler');
+            
+            const mainColor = currentConfig.color;
+            const darkColor = adjustColor(mainColor, -30);
+            const darkerColor = adjustColor(mainColor, -50);
+            
+            // Применяем цвет с металлическим эффектом
+            chassis.style.background = `
+                linear-gradient(135deg, 
+                    rgba(255,255,255,0.3) 0%, 
+                    transparent 30%, 
+                    transparent 70%, 
+                    rgba(0,0,0,0.2) 100%),
+                linear-gradient(180deg, ${mainColor}, ${darkColor})
+            `;
+            chassis.style.boxShadow = `
+                inset 0 5px 15px rgba(255,255,255,0.3),
+                inset 0 -10px 25px rgba(0,0,0,0.4),
+                0 10px 30px rgba(0,0,0,0.5),
+                0 0 50px ${mainColor}40
+            `;
+            
+            hood.style.background = `
+                linear-gradient(180deg, 
+                    rgba(255,255,255,0.25) 0%, 
+                    transparent 50%, 
+                    rgba(0,0,0,0.15) 100%),
+                linear-gradient(180deg, ${mainColor}, ${darkColor})
+            `;
+            
+            trunk.style.background = `
+                linear-gradient(180deg, 
+                    rgba(255,255,255,0.2) 0%, 
+                    transparent 50%, 
+                    rgba(0,0,0,0.2) 100%),
+                linear-gradient(180deg, ${darkColor}, ${darkerColor})
+            `;
+            
+            // Body type
+            if (currentConfig.body === 'sport') {
+                chassis.style.borderRadius = '20px 20px 15px 15px';
+                chassis.style.height = '120px';
+                chassis.style.top = '130px';
+            } else if (currentConfig.body === 'muscle') {
+                chassis.style.borderRadius = '35px 35px 25px 25px';
+                chassis.style.height = '150px';
+                chassis.style.top = '110px';
+            } else {
+                chassis.style.borderRadius = '30px 30px 20px 20px';
+                chassis.style.height = '140px';
+                chassis.style.top = '120px';
+            }
+            
+            // Hood type
+            hood.className = 'body-part hood ' + currentConfig.hood;
+            
+            // Bumper types
+            bumperFront.className = 'body-part bumper-front ' + currentConfig.bumpers;
+            bumperRear.className = 'body-part bumper-rear ' + currentConfig.bumpers;
+            
+            // Wheel classes
+            wheelFront.className = 'body-part wheel wheel-front ' + currentConfig.wheels;
+            wheelRear.className = 'body-part wheel wheel-rear ' + currentConfig.wheels;
+            
+            // Headlight types
+            headlightLeft.className = 'body-part headlight-left ' + currentConfig.lights;
+            headlightRight.className = 'body-part headlight-right ' + currentConfig.lights;
+            
+            // Spoiler
+            spoiler.className = 'body-part spoiler ' + (currentConfig.spoiler !== 'none' ? 'active ' + currentConfig.spoiler : '');
+            
+            updateStats();
+        }
+        
+        function updateStats() {
+            let speed = 50;
+            let handling = 50;
+            let power = 50;
+            
+            if (currentConfig.body === 'sport') {
+                speed += 15;
+                handling += 10;
+            } else if (currentConfig.body === 'muscle') {
+                power += 20;
+                speed += 5;
+            }
+            
+            if (currentConfig.wheels === 'racing') {
+                speed += 10;
+                handling += 5;
+            } else if (currentConfig.wheels === 'sport') {
+                handling += 8;
+            }
+            
+            if (currentConfig.spoiler !== 'none') {
+                handling += 10;
+            }
+            
+            if (currentConfig.hood === 'carbon') {
+                speed += 5;
+                power += 5;
+            }
+            
+            speed = Math.min(100, Math.max(0, speed));
+            handling = Math.min(100, Math.max(0, handling));
+            power = Math.min(100, Math.max(0, power));
+            
+            document.getElementById('speed-stat').style.width = speed + '%';
+            document.getElementById('handling-stat').style.width = handling + '%';
+            document.getElementById('power-stat').style.width = power + '%';
+        }
+        
+        function adjustColor(color, amount) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+            return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+        }
+        
+        function saveCar() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2500);
+            
+            console.log('Saved car configuration:', currentConfig);
+        }
+        
+        updateCar();
+    </script>
+</body>
+</html>
