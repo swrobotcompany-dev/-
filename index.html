@@ -3,360 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тачка на прокачку</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        
-        .game-container {
-            width: 1400px;
-            height: 800px;
-            background: 
-                radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%),
-                linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
-            border-radius: 20px;
-            position: relative;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
-            overflow: hidden;
-        }
-        
-        .garage-floor {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 180px;
-            background: 
-                linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%),
-                repeating-linear-gradient(90deg, #2c3e50 0px, #34495e 2px, #2c3e50 4px);
-            box-shadow: inset 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        .car-display {
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 700px;
-            height: 400px;
-        }
-        
-        .car-svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7));
-        }
-        
-        .wheel {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            position: absolute;
-            top: 260px;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-        
-        .wheel.standard {
-            background: radial-gradient(circle at 30% 30%, #5a5a5a, #2c2c2c 40%, #1a1a1a 70%);
-            border: 8px solid #3d3d3d;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3);
-        }
-        
-        .wheel.standard::before {
-            content: '';
-            position: absolute;
-            width: 55px;
-            height: 55px;
-            background: conic-gradient(from 0deg, #666 0deg, #666 30deg, #444 30deg, #444 60deg, #666 60deg, #666 90deg, #444 90deg, #444 120deg, #666 120deg, #666 150deg, #444 150deg, #444 180deg, #666 180deg, #666 210deg, #444 210deg, #444 240deg, #666 240deg, #666 270deg, #444 270deg, #444 300deg, #666 300deg, #666 330deg, #444 330deg, #444 360deg);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 3px solid #555;
-        }
-        
-        .wheel.standard::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            background: radial-gradient(circle, #silver, #999);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid #777;
-        }
-        
-        .wheel.sport {
-            background: radial-gradient(circle at 30% 30%, #4a4a4a, #1a1a1a 50%, #0a0a0a 80%);
-            border: 10px solid #e74c3c;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 20px rgba(231, 76, 60, 0.4);
-        }
-        
-        .wheel.sport::before {
-            content: '';
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background: conic-gradient(from 0deg, #e74c3c 0deg, #e74c3c 45deg, #c0392b 45deg, #c0392b 90deg, #e74c3c 90deg, #e74c3c 135deg, #c0392b 135deg, #c0392b 180deg, #e74c3c 180deg, #e74c3c 225deg, #c0392b 225deg, #c0392b 270deg, #e74c3c 270deg, #e74c3c 315deg, #c0392b 315deg, #c0392b 360deg);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        .wheel.sport::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, #fff, #ddd);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid #e74c3c;
-        }
-        
-        .wheel.racing {
-            background: radial-gradient(circle at 30% 30%, #3a3a3a, #0a0a0a 60%, #000 90%);
-            border: 12px solid #f39c12;
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.7), 0 0 25px rgba(243, 156, 18, 0.5);
-        }
-        
-        .wheel.racing::before {
-            content: '';
-            position: absolute;
-            width: 45px;
-            height: 45px;
-            background: conic-gradient(from 0deg, #f39c12 0deg, #f39c12 36deg, #e67e22 36deg, #e67e22 72deg, #f39c12 72deg, #f39c12 108deg, #e67e22 108deg, #e67e22 144deg, #f39c12 144deg, #f39c12 180deg, #e67e22 180deg, #e67e22 216deg, #f39c12 216deg, #f39c12 252deg, #e67e22 252deg, #e67e22 288deg, #f39c12 288deg, #f39c12 324deg, #e67e22 324deg, #e67e22 360deg);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        .wheel.racing::after {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background: radial-gradient(circle, #fff, #f1c40f);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid #f39c12;
-        }
-        
-        .wheel-front {
-            left: 110px;
-        }
-        
-        .wheel-rear {
-            left: 500px;
-        }
-        
-        .parts-panel {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            width: 320px;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
-            color: white;
-            max-height: 760px;
-            overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .panel-title {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 25px;
-            text-align: center;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .part-category {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .category-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #3498db;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .part-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        
-        .part-btn {
-            padding: 12px 8px;
-            background: linear-gradient(135deg, #34495e, #2c3e50);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 13px;
-            color: white;
-            font-weight: 500;
-        }
-        
-        .part-btn:hover {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            transform: translateY(-2px);
-        }
-        
-        .part-btn.active {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            border-color: #2ecc71;
-            box-shadow: 0 0 20px rgba(39, 174, 96, 0.5);
-        }
-        
-        .color-picker {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .color-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .color-btn:hover {
-            transform: scale(1.15);
-        }
-        
-        .color-btn.active {
-            border-color: #f39c12;
-            box-shadow: 0 0 25px rgba(243, 156, 18, 0.7);
-            transform: scale(1.1);
-        }
-        
-        .stats-panel {
-            position: absolute;
-            left: 20px;
-            top: 20px;
-            width: 240px;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .stat-item {
-            margin-bottom: 20px;
-        }
-        
-        .stat-label {
-            font-size: 16px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .stat-bar {
-            width: 100%;
-            height: 25px;
-            background: rgba(0,0,0,0.4);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        
-        .stat-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #27ae60, #2ecc71, #58d68d);
-            transition: width 0.5s ease;
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
-        }
-        
-        .save-btn {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 18px 50px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border: none;
-            border-radius: 35px;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5);
-        }
-        
-        .save-btn:hover {
-            transform: translateX(-50%) translateY(-5px);
-        }
-        
-        .notification {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-150px);
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
-            padding: 20px 40px;
-            border-radius: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            transition: transform 0.4s ease;
-            z-index: 1000;
-        }
-        
-        .notification.show {
-            transform: translateX(-50%) translateY(0);
-        }
-        
-        .model-name {
-            position: absolute;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-            letter-spacing: 2px;
-        }
-    </style>
+    <title>Тачка на прокачку — гараж и тест-драйв</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <div class="game-container">
@@ -368,18 +16,21 @@
                 <div class="stat-label">⚡ Скорость</div>
                 <div class="stat-bar">
                     <div class="stat-fill" id="speed-stat" style="width: 50%"></div>
+                    <span class="stat-value" id="speed-value">50/100</span>
                 </div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">🎯 Управление</div>
                 <div class="stat-bar">
                     <div class="stat-fill" id="handling-stat" style="width: 50%"></div>
+                    <span class="stat-value" id="handling-value">50/100</span>
                 </div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">💪 Мощность</div>
                 <div class="stat-bar">
                     <div class="stat-fill" id="power-stat" style="width: 50%"></div>
+                    <span class="stat-value" id="power-value">50/100</span>
                 </div>
             </div>
         </div>
@@ -414,14 +65,14 @@
                     </filter>
                 </defs>
             </svg>
-            <div class="wheel wheel-front standard" id="wheel-front"></div>
-            <div class="wheel wheel-rear standard" id="wheel-rear"></div>
+            
         </div>
         
-        <div class="model-name" id="model-name">TOYOTA MARK 2</div>
+        <div class="model-name" id="model-name">TOYOTA MARK II</div>
+        <div class="model-subtitle" id="model-subtitle">JZX100 · CLASSIC SEDAN</div>
         
         <div class="parts-panel">
-            <div class="panel-title">🔧 Тюнинг</div>
+            <div class="panel-title">🔧 Автомастерская</div>
             
             <div class="part-category">
                 <div class="category-title">🚗 Модель</div>
@@ -448,219 +99,62 @@
             </div>
         </div>
         
-        <button class="save-btn" onclick="saveCar()">💾 Сохранить тачку</button>
+        <div class="garage-actions">
+           <button type="button" class="save-btn" id="save-car">💾 Сохранить</button>
+           <button type="button" class="drive-btn" id="drive-car">🏁 Испытать машину</button>
+         </div>
     </div>
     
+
+    <section id="drive-overlay" class="drive-overlay" aria-label="Испытательная трасса" aria-hidden="true">
+      <div class="drive-shell">
+        <header class="drive-topbar">
+          <div><span class="drive-eyebrow">GARAGE TEST FACILITY</span><h2 id="drive-car-name">TOYOTA MARK II</h2></div>
+          <div class="drive-top-actions">
+            <button type="button" id="drive-reset" class="drive-tool">↺ Перезапуск (R)</button>
+            <button type="button" id="drive-close" class="drive-tool drive-exit">← В гараж (Esc)</button>
+          </div>
+        </header>
+        <div class="drive-layout">
+          <div class="track-frame">
+            <canvas id="track-canvas" width="1120" height="660" aria-label="Трасса, вид сверху"></canvas>
+            <div class="track-caption">ПОЛИГОН • АСФАЛЬТ / ТРАВА • КОНУСЫ</div>
+          </div>
+          <aside class="drive-dashboard">
+            <div class="digital-speed"><strong id="drive-speed">0</strong><span>км/ч</span></div>
+            <div class="digital-gear" id="drive-gear">N</div>
+            <div class="drive-metrics">
+              <div><span>Круг</span><b id="drive-lap">1</b></div>
+              <div><span>Текущий</span><b id="drive-time">00:00.00</b></div>
+              <div><span>Лучший</span><b id="drive-best">—</b></div>
+              <div><span>Контрольные точки</span><b id="drive-checkpoint">1 / 4</b></div>
+            </div>
+            <p id="drive-status" class="drive-status" aria-live="polite">Двигайтесь по трассе</p>
+            <div class="drive-instructions"><strong>Управление</strong>
+              <p>W / ↑ — газ · S / ↓ — тормоз и задний ход</p>
+              <p>A,D / ←,→ — поворот</p>
+              <p>Пробел — ручник / дрифт · R — заново</p>
+              <p>Проходи светящиеся контрольные точки по порядку, чтобы засчитать круг.</p>
+            </div>
+            <div class="touch-controls" aria-label="Сенсорное управление">
+              <div class="touch-steering">
+                <button type="button" data-drive-key="ArrowLeft" aria-label="Рулить влево">◀</button>
+                <button type="button" data-drive-key="ArrowRight" aria-label="Рулить вправо">▶</button>
+              </div>
+              <div class="touch-pedals">
+                <button type="button" data-drive-key="ArrowDown" aria-label="Тормоз">ТОРМОЗ</button>
+                <button type="button" data-drive-key="ArrowUp" aria-label="Газ">ГАЗ</button>
+                <button type="button" data-drive-key="Space" aria-label="Ручник">РУЧНИК</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <div class="notification" id="notification">✅ Машина сохранена!</div>
     
-    <script>
-        const colors = [
-            '#95a5a6', '#e74c3c', '#3498db', '#2ecc71', '#f39c12', 
-            '#9b59b6', '#1abc9c', '#e67e22', '#34495e', '#ecf0f1'
-        ];
-        
-        let currentConfig = {
-            model: 'mark2',
-            color: '#95a5a6',
-            wheels: 'standard'
-        };
-        
-        // SVG профили для каждой модели
-        const carProfiles = {
-            mark2: {
-                name: 'TOYOTA MARK 2',
-                // Классический седан 90-х: длинный капот, прямая крыша, угловатый багажник
-                body: 'M 80,280 L 80,250 Q 80,235 95,230 L 150,220 L 180,170 Q 190,155 210,150 L 380,150 Q 400,150 410,165 L 450,220 L 600,225 Q 620,228 625,245 L 625,280 Z',
-                windows: 'M 200,165 L 220,175 L 220,215 L 200,215 Z M 230,175 L 370,175 L 370,215 L 230,215 Z M 380,175 L 405,175 L 420,215 L 380,215 Z',
-                details: 'M 100,250 L 170,248 M 550,248 L 610,250',
-                headlight: { x: 95, y: 240, w: 35, h: 18 },
-                taillight: { x: 600, y: 240, w: 25, h: 20 },
-                stats: { speed: 65, handling: 60, power: 55 }
-            },
-            vesta: {
-                name: 'LADA VESTA',
-                // Современный седан: X-образная морда, плавные линии, более округлый
-                body: 'M 85,280 L 85,255 Q 85,240 100,235 L 160,225 L 195,175 Q 210,158 235,155 L 390,155 Q 415,155 425,175 L 460,225 L 605,230 Q 620,233 622,250 L 622,280 Z',
-                windows: 'M 215,170 L 235,180 L 235,218 L 215,218 Z M 245,180 L 380,180 L 380,218 L 245,218 Z M 390,180 L 415,180 L 430,218 L 390,218 Z',
-                details: 'M 110,255 L 175,253 M 545,253 L 610,255 M 140,240 L 170,238',
-                headlight: { x: 100, y: 243, w: 38, h: 16 },
-                taillight: { x: 598, y: 243, w: 24, h: 18 },
-                stats: { speed: 50, handling: 55, power: 45 }
-            },
-            porsche: {
-                name: 'PORSCHE 911',
-                // Легендарный "горбатый" силуэт: низкий, покатая задняя часть, округлые формы
-                body: 'M 90,280 L 90,260 Q 90,248 105,243 L 170,235 L 210,195 Q 225,178 250,175 L 340,175 Q 370,175 385,190 L 420,230 L 440,235 L 580,240 Q 610,243 615,260 L 615,280 Z',
-                windows: 'M 225,190 L 250,195 L 250,225 L 225,225 Z M 260,195 L 335,195 L 335,225 L 260,225 Z M 345,195 L 375,195 L 395,225 L 345,225 Z',
-                details: 'M 110,260 L 180,258 M 520,258 L 600,260',
-                headlight: { x: 105, y: 250, w: 32, h: 14 },
-                taillight: { x: 590, y: 250, w: 22, h: 14 },
-                stats: { speed: 88, handling: 85, power: 78 }
-            },
-            bugatti: {
-                name: 'BUGATTI VEYRON',
-                // Гиперкар: очень низкий, широкий, агрессивный, с характерной решёткой
-                body: 'M 70,280 L 70,262 Q 70,250 85,245 L 155,238 L 195,200 Q 210,185 235,182 L 370,182 Q 400,182 415,198 L 450,235 L 475,238 L 615,245 Q 635,248 638,265 L 638,280 Z',
-                windows: 'M 210,198 L 235,203 L 235,230 L 210,230 Z M 245,203 L 365,203 L 365,230 L 245,230 Z M 375,203 L 405,203 L 425,230 L 375,230 Z',
-                details: 'M 90,262 L 165,260 M 540,260 L 625,262 M 130,250 L 160,248 M 130,255 L 160,253',
-                headlight: { x: 88, y: 252, w: 30, h: 12 },
-                taillight: { x: 615, y: 252, w: 22, h: 14 },
-                stats: { speed: 98, handling: 75, power: 95 }
-            }
-        };
-        
-        const colorPicker = document.getElementById('color-picker');
-        colors.forEach(color => {
-            const btn = document.createElement('div');
-            btn.className = 'color-btn';
-            btn.style.background = color;
-            if (color === currentConfig.color) btn.classList.add('active');
-            btn.onclick = () => selectColor(color, btn);
-            colorPicker.appendChild(btn);
-        });
-        
-        function selectColor(color, btn) {
-            currentConfig.color = color;
-            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateCar();
-        }
-        
-        document.querySelectorAll('.part-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const part = this.dataset.part;
-                const value = this.dataset.value;
-                document.querySelectorAll(`[data-part="${part}"]`).forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentConfig[part] = value;
-                updateCar();
-            });
-        });
-        
-        function updateCar() {
-            const svg = document.getElementById('car-svg');
-            const profile = carProfiles[currentConfig.model];
-            
-            // Очистить SVG, оставив defs
-            const defs = svg.querySelector('defs');
-            svg.innerHTML = '';
-            svg.appendChild(defs);
-            
-            // Обновить градиент цвета
-            const bodyGrad = document.getElementById('bodyGradient');
-            const lightColor = adjustColor(currentConfig.color, 40);
-            const darkColor = adjustColor(currentConfig.color, -40);
-            bodyGrad.innerHTML = `
-                <stop offset="0%" style="stop-color:${lightColor};stop-opacity:1" />
-                <stop offset="50%" style="stop-color:${currentConfig.color};stop-opacity:1" />
-                <stop offset="100%" style="stop-color:${darkColor};stop-opacity:1" />
-            `;
-            
-            // Тень под машиной
-            const shadow = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-            shadow.setAttribute('cx', '350');
-            shadow.setAttribute('cy', '300');
-            shadow.setAttribute('rx', '280');
-            shadow.setAttribute('ry', '15');
-            shadow.setAttribute('fill', 'rgba(0,0,0,0.5)');
-            svg.appendChild(shadow);
-            
-            // Основной кузов
-            const body = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            body.setAttribute('d', profile.body);
-            body.setAttribute('fill', 'url(#bodyGradient)');
-            body.setAttribute('stroke', darkColor);
-            body.setAttribute('stroke-width', '1.5');
-            body.setAttribute('filter', 'url(#carShadow)');
-            svg.appendChild(body);
-            
-            // Линия крыши (блик)
-            const roofHighlight = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            roofHighlight.setAttribute('d', profile.body);
-            roofHighlight.setAttribute('fill', 'none');
-            roofHighlight.setAttribute('stroke', lightColor);
-            roofHighlight.setAttribute('stroke-width', '1');
-            roofHighlight.setAttribute('opacity', '0.6');
-            svg.appendChild(roofHighlight);
-            
-            // Окна
-            const windows = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            windows.setAttribute('d', profile.windows);
-            windows.setAttribute('fill', 'url(#windowGradient)');
-            windows.setAttribute('stroke', '#2c3e50');
-            windows.setAttribute('stroke-width', '1.5');
-            svg.appendChild(windows);
-            
-            // Детали кузова (линии дверей и т.д.)
-            const details = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            details.setAttribute('d', profile.details);
-            details.setAttribute('fill', 'none');
-            details.setAttribute('stroke', darkColor);
-            details.setAttribute('stroke-width', '1.5');
-            details.setAttribute('opacity', '0.7');
-            svg.appendChild(details);
-            
-            // Фары
-            const headlight = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-            headlight.setAttribute('cx', profile.headlight.x + profile.headlight.w/2);
-            headlight.setAttribute('cy', profile.headlight.y + profile.headlight.h/2);
-            headlight.setAttribute('rx', profile.headlight.w/2);
-            headlight.setAttribute('ry', profile.headlight.h/2);
-            headlight.setAttribute('fill', 'url(#headlightGradient)');
-            headlight.setAttribute('filter', 'url(#carShadow)');
-            svg.appendChild(headlight);
-            
-            // Задние фонари
-            const taillight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            taillight.setAttribute('x', profile.taillight.x);
-            taillight.setAttribute('y', profile.taillight.y);
-            taillight.setAttribute('width', profile.taillight.w);
-            taillight.setAttribute('height', profile.taillight.h);
-            taillight.setAttribute('rx', '3');
-            taillight.setAttribute('fill', '#c0392b');
-            taillight.setAttribute('opacity', '0.9');
-            svg.appendChild(taillight);
-            
-            // Обновить название
-            document.getElementById('model-name').textContent = profile.name;
-            
-            // Обновить статы
-            updateStats();
-        }
-        
-        function updateStats() {
-            const baseStats = carProfiles[currentConfig.model].stats;
-            let speed = baseStats.speed;
-            let handling = baseStats.handling;
-            let power = baseStats.power;
-            
-            if (currentConfig.wheels === 'racing') {
-                speed += 5;
-                handling += 3;
-            } else if (currentConfig.wheels === 'sport') {
-                handling += 5;
-            }
-            
-            document.getElementById('speed-stat').style.width = Math.min(100, speed) + '%';
-            document.getElementById('handling-stat').style.width = Math.min(100, handling) + '%';
-            document.getElementById('power-stat').style.width = Math.min(100, power) + '%';
-        }
-        
-        function adjustColor(color, amount) {
-            const num = parseInt(color.replace('#', ''), 16);
-            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
-            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
-            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
-            return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
-        }
-        
-        function saveCar() {
-            const notification = document.getElementById('notification');
-            notification.classList.add('show');
-            setTimeout(() => notification.classList.remove('show'), 2500);
-        }
-        
-        updateCar();
-    </script>
+    <script src="src/testdrive.js"></script>
+    <script src="src/garage.js"></script>
 </body>
 </html>
