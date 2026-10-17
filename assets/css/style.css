@@ -1,0 +1,477 @@
+/* Auto Lab — garage styling with lightweight, dependency-free test drive. */
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 1400px;
+            height: 800px;
+            background: 
+                radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%),
+                linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+        
+        .garage-floor {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background: 
+                linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%),
+                repeating-linear-gradient(90deg, #2c3e50 0px, #34495e 2px, #2c3e50 4px);
+            box-shadow: inset 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .car-display {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 400px;
+        }
+        
+        .car-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7));
+        }
+        
+        .wheel {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: absolute;
+            top: 260px;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .wheel.standard {
+            background: radial-gradient(circle at 30% 30%, #5a5a5a, #2c2c2c 40%, #1a1a1a 70%);
+            border: 8px solid #3d3d3d;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .wheel.standard::before {
+            content: '';
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            background: conic-gradient(from 0deg, #666 0deg, #666 30deg, #444 30deg, #444 60deg, #666 60deg, #666 90deg, #444 90deg, #444 120deg, #666 120deg, #666 150deg, #444 150deg, #444 180deg, #666 180deg, #666 210deg, #444 210deg, #444 240deg, #666 240deg, #666 270deg, #444 270deg, #444 300deg, #666 300deg, #666 330deg, #444 330deg, #444 360deg);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #555;
+        }
+        
+        .wheel.standard::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle, #silver, #999);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #777;
+        }
+        
+        .wheel.sport {
+            background: radial-gradient(circle at 30% 30%, #4a4a4a, #1a1a1a 50%, #0a0a0a 80%);
+            border: 10px solid #e74c3c;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .wheel.sport::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: conic-gradient(from 0deg, #e74c3c 0deg, #e74c3c 45deg, #c0392b 45deg, #c0392b 90deg, #e74c3c 90deg, #e74c3c 135deg, #c0392b 135deg, #c0392b 180deg, #e74c3c 180deg, #e74c3c 225deg, #c0392b 225deg, #c0392b 270deg, #e74c3c 270deg, #e74c3c 315deg, #c0392b 315deg, #c0392b 360deg);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .wheel.sport::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #fff, #ddd);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #e74c3c;
+        }
+        
+        .wheel.racing {
+            background: radial-gradient(circle at 30% 30%, #3a3a3a, #0a0a0a 60%, #000 90%);
+            border: 12px solid #f39c12;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.7), 0 0 25px rgba(243, 156, 18, 0.5);
+        }
+        
+        .wheel.racing::before {
+            content: '';
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            background: conic-gradient(from 0deg, #f39c12 0deg, #f39c12 36deg, #e67e22 36deg, #e67e22 72deg, #f39c12 72deg, #f39c12 108deg, #e67e22 108deg, #e67e22 144deg, #f39c12 144deg, #f39c12 180deg, #e67e22 180deg, #e67e22 216deg, #f39c12 216deg, #f39c12 252deg, #e67e22 252deg, #e67e22 288deg, #f39c12 288deg, #f39c12 324deg, #e67e22 324deg, #e67e22 360deg);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .wheel.racing::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: radial-gradient(circle, #fff, #f1c40f);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #f39c12;
+        }
+        
+        .wheel-front {
+            left: 110px;
+        }
+        
+        .wheel-rear {
+            left: 500px;
+        }
+        
+        .parts-panel {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 320px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            max-height: 760px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .panel-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .part-category {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #3498db;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .part-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .part-btn {
+            padding: 12px 8px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .part-btn:hover {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            transform: translateY(-2px);
+        }
+        
+        .part-btn.active {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            border-color: #2ecc71;
+            box-shadow: 0 0 20px rgba(39, 174, 96, 0.5);
+        }
+        
+        .color-picker {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .color-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.15);
+        }
+        
+        .color-btn.active {
+            border-color: #f39c12;
+            box-shadow: 0 0 25px rgba(243, 156, 18, 0.7);
+            transform: scale(1.1);
+        }
+        
+        .stats-panel {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            width: 240px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat-item {
+            margin-bottom: 20px;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .stat-bar {
+            width: 100%;
+            height: 25px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71, #58d68d);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+        }
+        
+        .save-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border: none;
+            border-radius: 35px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5);
+        }
+        
+        .save-btn:hover {
+            transform: translateX(-50%) translateY(-5px);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-150px);
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            transition: transform 0.4s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .model-name {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+        }
+
+/* Garage refinement and responsive layout */
+:root { color-scheme: dark; --accent:#f5a83d; --ink:#e8edf2; --muted:#93a3b0; }
+body { background: radial-gradient(circle at 65% 15%,#263e52,#0a1421 46%,#060c16); color:var(--ink); }
+.game-container {
+  width:min(1460px,calc(100vw - 28px));height:min(850px,calc(100vh - 28px));
+  border:1px solid #ffffff24;
+  background: radial-gradient(ellipse at 53% 36%,rgba(76,117,145,.3),transparent 38%),
+              repeating-linear-gradient(0deg,transparent 0,transparent 45px,rgba(255,255,255,.013) 46px),
+              linear-gradient(145deg,#192b39,#0b1624 70%);
+}
+.game-container::before {
+ content:"AUTO LAB  /  CUSTOM BUILDS";position:absolute;top:25px;left:50%;transform:translateX(-50%);
+ font:700 12px/1.4 system-ui;letter-spacing:5px;color:#cadbe575;white-space:nowrap;
+}
+.garage-floor {height:29%;background:linear-gradient(180deg,#3044530a,#040a12c5),
+  repeating-linear-gradient(92deg,transparent 0,transparent 52px,#d8dce016 53px,#d8dce016 54px),
+  linear-gradient(180deg,#253b48,#101b25);border-top:2px solid #d8e4e53b;}
+.car-display { width:min(700px,calc(100% - 640px));min-width:480px;height:auto;aspect-ratio:7/4;top:45%;
+  filter:drop-shadow(0px 20px 22px #0007); }
+.car-svg {width:100%;height:100%;filter:drop-shadow(0 8px 13px rgba(0,0,0,.6));}
+.stats-panel,.parts-panel {background:rgba(9,19,29,.83);backdrop-filter:blur(18px);
+  border:1px solid #c8deef28;box-shadow:0 12px 30px #01070e59;}
+.stats-panel {z-index:3;width:235px;padding:23px;}
+.parts-panel {z-index:3;width:310px;max-height:calc(100% - 42px);padding:21px;}
+.panel-title {font:800 23px/1.1 system-ui;background:none;color:#f0b566;-webkit-text-fill-color:unset;margin-bottom:19px;}
+.category-title {color:#94cee0;font-size:13px;letter-spacing:2px;}
+.part-btn {background:#243747;border:1px solid #70859449;border-radius:9px;min-height:45px;}
+.part-btn.active {background:#335b55;border:1px solid #65daa0;box-shadow:inset 0 0 0 1px #65daa03e;}
+.color-btn {width:37px;height:37px;border-width:2px;}
+.color-btn.active {border-color:#fff;box-shadow:0 0 0 3px #eeb568;}
+.stat-bar {position:relative;height:23px;}
+.stat-fill {background:linear-gradient(90deg,#327f89,#50dfac);transition:width .3s;}
+.stat-value {position:absolute;right:9px;top:3px;z-index:2;font-size:12px;color:white;text-shadow:0 1px 2px #000;}
+.model-name {bottom:127px;font-size:clamp(18px,2vw,29px);white-space:nowrap;letter-spacing:3px;text-shadow:0 4px 12px #000;}
+.model-subtitle {position:absolute;left:50%;bottom:102px;transform:translateX(-50%);white-space:nowrap;
+  color:#b0c5cf;text-shadow:0 2px 8px #000;font:600 11px system-ui;letter-spacing:3px;}
+.garage-actions {position:absolute;z-index:4;bottom:26px;left:50%;transform:translateX(-50%);
+  display:flex;gap:13px;align-items:center;justify-content:center;white-space:nowrap;}
+.save-btn,.drive-btn {position:static;transform:none;font:700 16px system-ui;padding:15px 24px;border-radius:11px;
+  border:1px solid #ffffff28;cursor:pointer;transition:.18s ease;box-shadow:0 10px 22px #0006;}
+.save-btn {background:linear-gradient(125deg,#405365,#233747);color:#fff;}
+.drive-btn {background:linear-gradient(125deg,#ffbf67,#ec8736);color:#142331;}
+.save-btn:hover,.drive-btn:hover{transform:translateY(-3px);filter:brightness(1.06);}
+button:focus-visible{outline:3px solid #93ffc6;outline-offset:3px;}
+
+/* Interactive driving test: its own full-screen UI */
+.drive-overlay {position:fixed;inset:0;z-index:5000;display:none;background:#08121e;
+  padding:clamp(8px,2vh,24px);color:#e8f1f3;overflow:auto;}
+.drive-overlay.open {display:flex;align-items:center;justify-content:center;}
+.drive-shell {width:min(1490px,100%);max-height:100%;overflow:auto;
+  border:1px solid #7e9cb548;border-radius:18px;background:#142533;box-shadow:0 24px 80px #000a;}
+.drive-topbar {display:flex;justify-content:space-between;align-items:center;padding:20px 24px;
+  gap:18px;border-bottom:1px solid #ffffff21;background:#101e2a;}
+.drive-topbar h2 {margin:5px 0 0;font:800 clamp(18px,2vw,26px) system-ui;letter-spacing:1px;}
+.drive-eyebrow {color:#71dbc0;letter-spacing:2.5px;font:700 11px system-ui;}
+.drive-top-actions {display:flex;gap:10px;}
+.drive-tool {padding:11px 14px;border:1px solid #7c9daa55;background:#233946;color:#fff;
+  border-radius:9px;font:700 13px system-ui;cursor:pointer;}
+.drive-exit {background:#d78f48;border-color:#f6b772;color:#101d28;}
+.drive-layout {display:grid;grid-template-columns:minmax(0,1fr) 278px;gap:0;}
+.track-frame {position:relative;align-self:start;background:#162b29;min-width:0;line-height:0;}
+#track-canvas {display:block;width:100%;height:auto;aspect-ratio:1120/660;touch-action:none;}
+.track-caption {position:absolute;bottom:14px;left:16px;padding:8px 13px;
+  background:#08191acb;color:#d5ebde;border-radius:6px;font:700 10px system-ui;letter-spacing:1.3px;}
+.drive-dashboard {border-left:1px solid #ffffff29;background:linear-gradient(175deg,#1b3440,#0d1c29);
+  padding:16px;position:relative;}
+.digital-speed {display:flex;align-items:baseline;justify-content:center;gap:7px;
+  font:700 13px system-ui;color:#a9babe;}
+.digital-speed strong {font:800 74px/1.15 system-ui;color:#f0faf7;letter-spacing:-4px;font-variant-numeric:tabular-nums;}
+.digital-gear {text-align:center;border-radius:9px;padding:5px;background:#244e47;
+  color:#77eecb;font:800 20px system-ui;margin:4px auto 14px;max-width:75px;}
+.drive-metrics {display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.drive-metrics > div{background:#06141c90;padding:10px;border:1px solid #ffffff1c;border-radius:9px;}
+.drive-metrics span {display:block;color:#a5b8bb;font:600 11px system-ui;margin-bottom:4px;}
+.drive-metrics b {font:800 18px system-ui;font-variant-numeric:tabular-nums;}
+.drive-status {min-height:44px;color:#87efc1;font:600 13px/1.5 system-ui;margin:13px 0;}
+.drive-instructions {border-top:1px solid #ffffff23;padding-top:14px;color:#b7c6cb;font:12px/1.4 system-ui;}
+.drive-instructions strong {color:#f7d293;}
+.drive-instructions p{margin:7px 0;}
+.touch-controls {display:grid;gap:11px;grid-template-columns:1fr 1fr;margin-top:17px;}
+.touch-steering,.touch-pedals {display:flex;gap:6px;flex-wrap:wrap;}
+.touch-controls button {touch-action:none;user-select:none;border:1px solid #a2b4bd77;
+  background:#2e4c59;border-radius:9px;padding:9px;color:#fff;font:700 12px system-ui;min-width:49px;}
+.touch-controls button.pressed {background:#db995a;color:#15212b;}
+.touch-pedals button:last-child{background:#5f5551;}
+.notification {background:linear-gradient(140deg,#205e57,#36a276);font:700 17px system-ui;}
+@media(max-width:1150px){
+  body{overflow:auto;padding:10px 0;align-items:flex-start;}
+  .game-container{height:1120px;min-height:1120px;width:min(900px,calc(100vw - 16px));}
+  .game-container::before {top:12px;}
+  .stats-panel {top:40px;left:15px;width:210px;}
+  .parts-panel {top:40px;right:15px;width:265px;max-height:620px;}
+  .car-display{width:min(670px,90%);min-width:0;top:64%;left:47%;}
+  .model-name {bottom:139px;}
+  .model-subtitle {bottom:113px;}
+}
+@media(max-width:720px){
+ .game-container{min-height:1330px;height:1330px;margin:0 auto;}
+ .game-container::before{font-size:10px;letter-spacing:1.5px;}
+ .stats-panel {top:42px;left:12px;right:12px;width:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px;}
+ .stats-panel .panel-title {grid-column:1/-1;font-size:18px;margin-bottom:0;}
+ .stats-panel .stat-label {font-size:11px;} .stat-item{margin:0;}
+ .parts-panel{top:225px;left:12px;right:12px;width:auto;max-height:435px;padding:13px;}
+ .parts-panel .panel-title{font-size:20px;margin-bottom:10px;}
+ .part-category{margin-bottom:12px;padding-bottom:11px;}
+ .category-title{font-size:12px;margin-bottom:8px;}
+ .color-picker{grid-template-columns:repeat(10,1fr);gap:4px;}
+ .color-btn{width:clamp(17px,6vw,36px);height:clamp(17px,6vw,36px);}
+ .car-display{top:68%;left:50%;width:96%;}
+ .model-name{bottom:149px;font-size:20px;letter-spacing:1px;}
+ .model-subtitle{bottom:125px;letter-spacing:1px;font-size:10px;}
+ .garage-actions{bottom:38px;gap:7px;}
+ .save-btn,.drive-btn{font-size:12px;padding:13px 10px;}
+ .drive-overlay{padding:0;align-items:flex-start;}
+ .drive-shell{border-radius:0;max-height:none;min-height:100vh;}
+ .drive-layout{grid-template-columns:1fr;}
+ .drive-dashboard{border-left:0;border-top:1px solid #ffffff33;}
+ .drive-topbar{padding:13px;flex-direction:column;align-items:flex-start;}
+ .drive-top-actions{width:100%;justify-content:space-between;}
+ .digital-speed strong{font-size:48px;}
+ .drive-instructions{font-size:12px;}
+ .touch-controls{grid-template-columns:1fr 1fr;}
+}
+
