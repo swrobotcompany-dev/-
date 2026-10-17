@@ -21,6 +21,7 @@ function readBest(model) {
 }
 function resetCar(){
  if(!config)return;
+ CONES.forEach(cone=>{cone.down=false;});
  car={x:557,y:526,angle:0,vx:0,vy:0,lap:1,nextGate:0,lapStart:elapsed,lastLap:0,hits:0,skids:[],drift:0,steer:0};
  $drive('drive-status').textContent='Тормози перед поворотами • круг начинается с первого сектора';
 }
@@ -84,10 +85,9 @@ function updatePhysics(dt){
  if(car.y<40||car.y>620){car.y=clamp(car.y,40,620);car.vy*=-.18;}
  for(const cone of CONES){
   const dx=car.x-cone.x,dy=car.y-cone.y,dist=Math.hypot(dx,dy);
-  if(dist<24&&dist>0){
-   const nx=dx/dist,ny=dy/dist;
-   car.x=cone.x+nx*24;car.y=cone.y+ny*24;
-   if(Math.hypot(car.vx,car.vy)>13){car.vx*=.5;car.vy*=.5;car.hits++;}
+  if(!cone.down&&dist<24&&dist>0){
+   // Конус сбивается машиной, а не становится непреодолимым препятствием.
+   cone.down=true;car.vx*=.8;car.vy*=.8;car.hits++;
   }
  }
  const gate=GATES[car.nextGate],d=Math.hypot(car.x-gate.x,car.y-gate.y);
@@ -172,9 +172,9 @@ function drawTrack(){
   if(active){ctx.font='bold 12px system-ui';ctx.fillStyle='#b6ffdf';ctx.fillText('CHECKPOINT',gate.x,gate.y-38);}
  });
  CONES.forEach(cone=>{
-  ctx.save();ctx.translate(cone.x,cone.y);ctx.rotate(Math.PI/6);
+  ctx.save();ctx.translate(cone.x,cone.y);ctx.rotate(cone.down?Math.PI/2:Math.PI/6);
   ctx.fillStyle='#16211c';ctx.beginPath();ctx.ellipse(2,4,12,8,0,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#f97336';ctx.beginPath();ctx.moveTo(0,-11);ctx.lineTo(9,8);ctx.lineTo(-9,8);ctx.closePath();ctx.fill();
+  ctx.fillStyle=cone.down?'#a34c2b':'#f97336';ctx.beginPath();ctx.moveTo(0,cone.down?-6:-11);ctx.lineTo(9,8);ctx.lineTo(-9,8);ctx.closePath();ctx.fill();
   ctx.strokeStyle='#f8d8be';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-4,-1);ctx.lineTo(5,-1);ctx.stroke();
   ctx.restore();
  });
